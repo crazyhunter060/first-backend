@@ -1,4 +1,4 @@
-# Chai aur backend series
+# Backend series
 
 Video series for backend
 
