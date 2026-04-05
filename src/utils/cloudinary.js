@@ -19,7 +19,7 @@ const uploadOnCloudinary= async(localFilePath) => {
         return response;
     }
     catch{
-        fs.unlinkSync(localFilePath)
+        fs.unlinkSync(localFilePath) // remove the locally saved file as the upload got failed
         return null;
     }
 }
