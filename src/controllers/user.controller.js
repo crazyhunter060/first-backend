@@ -46,7 +46,7 @@ const registerUser=asyncHandler( async(req, res)=>{
         throw new ApiError(400, "password is required")
     }
 
-    const existedUser=User.findOne({
+    const existedUser=await User.findOne({
         $or: [{userName}, {email}]
     })
     if(existedUser)
@@ -55,11 +55,18 @@ const registerUser=asyncHandler( async(req, res)=>{
     }
 
     console.log(req.files)
-    const avatarLocalPath=req.files?.avatar[0]?.path
-    const coverImageLocalPath=req.files?.coverImage[0]?.path;
+    const avatarLocalPath=req.files?.avatar?.[0]?.path.replace(/\\/g, "/");
+    const coverImageLocalPath=req.files?.coverImage?.[0]?.path.replace(/\\/g, "/");
+
+    // let coverImageLocalPath;
+    // if(req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length>0)
+    // {
+    //     coverImageLocalPath=req.files.coverImage[0].path
+    // }
 
     if(!avatarLocalPath)
     {
+        console.log("CHECK FAILED");
         throw new ApiError(400, "Avatar is required");
     }
 
@@ -77,7 +84,7 @@ const registerUser=asyncHandler( async(req, res)=>{
         coverImage: coverImage?.url || "",
         email,
         password,
-        userName: userName.toLower()
+        userName: userName.toLowerCase()
     })
 
     const createdUser=await User.findById(user._id).select(
